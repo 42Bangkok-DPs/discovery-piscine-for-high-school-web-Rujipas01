@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+    <script>
+        function calculate() {
+            const leftValue = document.getElementById("left").value;
+            const operator = document.getElementById("operator").value;
+            const rightValue = document.getElementById("right").value;
+
+            // Validate inputs
+            if (!isPositiveInteger(leftValue) || !isPositiveInteger(rightValue)) {
+                alert('Error :(');
+                return;
+            }
+
+            const leftNum = parseInt(leftValue);
+            const rightNum = parseInt(rightValue);
+            let result;
+
+            // Perform calculation based on operator
+            switch (operator) {
+                case '+':
+                    result = leftNum + rightNum;
+                    break;
+                case '-':
+                    result = leftNum - rightNum;
+                    break;
+                case '*':
+                    result = leftNum * rightNum;
+                    break;
+                case '/':
+                    if (rightNum === 0) {
+                        alert("It's over 9000!");
+                        console.log("It's over 9000!");
+                        return;
+                    }
+                    result = leftNum / rightNum;
+                    break;
+                case '%':
+                    if (rightNum === 0) {
+                        alert("It's over 9000!");
+                        console.log("It's over 9000!");
+                        return;
+                    }
+                    result = leftNum % rightNum;
+                    break;
+                default:
+                    alert('Error :(');
+                    return;
+            }
+
+            alert(`Result: ${result}`);
+            console.log(`Result: ${result}`);
+        }
+
+        function isPositiveInteger(value) {
+            const num = parseInt(value);
+            return !isNaN(num) && num >= 0;
+        }
+
+        // Alert every 30 seconds
+        setInterval(() => {
+            alert('Please, use me...');
+        }, 30000);
+    </script>
+</head>
+<body>
+    <h1>Basic Calculator</h1>
+    <input type="text" id="left" placeholder="Left operand" />
+    <select id="operator">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+        <option value="%">%</option>
+    </select>
+    <input type="text" id="right" placeholder="Right operand" />
+    <input type="button" value="Try me!" onclick="calculate()" />
+</body>
+</html>
