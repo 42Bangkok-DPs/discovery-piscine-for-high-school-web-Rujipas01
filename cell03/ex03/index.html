@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #ft_list {
+            margin-top: 20px;
+        }
+        .todo-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+        .todo-item:hover {
+            background-color: #e1e1e1;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Task Management</h1>
+<button id="newTaskButton">New</button>
+<div id="ft_list"></div>
+
+<script>
+    function getCookies() {
+        const cookieArray = document.cookie.split(';');
+        const cookies = {};
+        cookieArray.forEach(cookie => {
+            const [key, value] = cookie.split('=');
+            cookies[key.trim()] = decodeURIComponent(value);
+        });
+        return cookies;
+    }
+
+    function setCookie(name, value, days) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+    }
+
+    function loadTasks() {
+        const cookies = getCookies();
+        if (cookies['tasks']) {
+            const tasks = JSON.parse(cookies['tasks']);
+            tasks.forEach(task => addTaskToDOM(task));
+        }
+    }
+DOM
+    function addTaskToDOM(task) {
+        const taskDiv = document.createElement('div');
+        taskDiv.textContent = task;
+        taskDiv.className = 'todo-item';
+        taskDiv.onclick = () => removeTask(taskDiv, task);
+        document.getElementById('ft_list').prepend(taskDiv);
+    }
+
+    function removeTask(taskDiv, task) {
+        const confirmRemove = confirm('Do you want to remove this task?');
+        if (confirmRemove) {
+            taskDiv.remove();
+            updateCookies();
+        }
+    }
+
+    function updateCookies() {
+        const tasks = Array.from(document.querySelectorAll('.todo-item')).map(item => item.textContent);
+        setCookie('tasks', JSON.stringify(tasks), 7); // Save for 7 days
+    }
+
+    document.getElementById('newTaskButton').onclick = () => {
+        const newTask = prompt('Enter a new task:');
+        if (newTask) {
+            addTaskToDOM(newTask);
+            updateCookies();
+        }
+    };
+
+    loadTasks();
+</script>
+
+</body>
+</html>
