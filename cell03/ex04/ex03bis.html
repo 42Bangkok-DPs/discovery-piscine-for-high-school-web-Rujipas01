@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Task Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #ft_list { margin-top: 20px; }
+        .task { padding: 10px; margin: 5px; border: 1px solid #ccc; cursor: pointer; }
+        .task:hover { background-color: #f0f0f0; }
+        #newTaskButton { margin-top: 20px; padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h1>To Do List</h1>
+    <div id="ft_list"></div>
+    <button id="newTaskButton">New</button>
+
+    <script>
+        $(document).ready(function() {
+            loadTasks();
+
+            $('#newTaskButton').click(function() {
+                const task = prompt('Enter a new TO DO:');
+                if (task && task.trim() !== '') {
+                    addTask(task);
+                }
+            });
+
+            function addTask(task) {
+                const taskDiv = $('<div class="task"></div>').text(task);
+                taskDiv.click(function() {
+                    const confirmation = confirm('Do you want to remove this TO DO?');
+                    if (confirmation) {
+                        $(this).remove();
+                        saveTasks();
+                    }
+                });
+                $('#ft_list').prepend(taskDiv);
+                saveTasks();
+            }
+
+            function saveTasks() {
+                const tasks = [];
+                $('#ft_list .task').each(function() {
+                    tasks.push($(this).text());
+                });
+                document.cookie = "tasks=" + JSON.stringify(tasks) + "; path=/";
+            }
+            
+            function loadTasks() {
+                const cookieValue = document.cookie.split('; ').find(row => row.startsWith('tasks='));
+                if (cookieValue) {
+                    const tasks = JSON.parse(cookieValue.split('=')[1]);
+                    tasks.forEach(task => addTask(task));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
